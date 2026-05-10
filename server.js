@@ -91,55 +91,42 @@ const aiLimiter = rateLimit({
     message: { error: 'Limite de análise por IA atingido para esta hora. Use o modo offline.' }
 });
 
-// Storage Configuration (Simple JSON DB)
+// Storage Configuration (Legacy JSON DB disabled for production/Vercel)
 const DB_PATH = path.join(__dirname, 'data', 'db.json');
-if (!fs.existsSync(path.join(__dirname, 'data'))) {
-    fs.mkdirSync(path.join(__dirname, 'data'));
-}
-if (!fs.existsSync(DB_PATH)) {
-    const initialData = {
-        activities: [],
-        plots: [
-            { id: 'talhao_1', name: 'Talhão 1 - Soja', area: 10, crop: 'soja' },
-            { id: 'talhao_2', name: 'Talhão 2 - Milho', area: 5, crop: 'milho' }
-        ],
-        machinery: [],
-        pests: [],
-        financials: {
-            totalRevenue: 0,
-            totalExpenses: 0
-        }
-    };
-    fs.writeFileSync(DB_PATH, JSON.stringify(initialData, null, 2));
-}
+/* 
+Local DB initialization disabled for Vercel compatibility.
+The app now uses Supabase as the primary database.
+*/
 
 // DB Helper Functions
 function readDB() {
     try {
-        if (!fs.existsSync(DB_PATH)) {
-            const examplePath = path.join(__dirname, 'data', 'db.example.json');
-            if (fs.existsSync(examplePath)) {
-                fs.copyFileSync(examplePath, DB_PATH);
-            } else {
-                throw new Error("Base de dados exemplo não encontrada.");
-            }
+        if (fs.existsSync(DB_PATH)) {
+            return JSON.parse(fs.readFileSync(DB_PATH));
         }
-        return JSON.parse(fs.readFileSync(DB_PATH));
+        return { activities: [], plots: [], machinery: [], pests: [], financials: { totalRevenue: 0, totalExpenses: 0 } };
     } catch (err) {
-        console.error("DB Read Error:", err);
-        return { activities: [], plots: [], machinery: [], pests: [], user: {} };
+        return { activities: [], plots: [], machinery: [], pests: [], financials: { totalRevenue: 0, totalExpenses: 0 } };
     }
 }
 
 function writeDB(data) {
-    fs.writeFileSync(DB_PATH, JSON.stringify(data, null, 2));
+    // Disabled on production to avoid EROFS errors
+    console.log("Local write ignored in production.");
 }
 
 // Multer for Pest Photos (Secured)
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        const uploadDir = path.join(__dirname, 'public', 'uploads');
-        if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir, { recursive: true });
+        // Use /tmp for Vercel, public/uploads for local
+        const uploadDir = process.env.VERCEL ? '/tmp/uploads' : path.join(__dirname, 'public', 'uploads');
+        if (!fs.existsSync(uploadDir)) {
+            try {
+                fs.mkdirSync(uploadDir, { recursive: true });
+            } catch (e) {
+                console.log("Upload directory creation skipped or failed");
+            }
+        }
         cb(null, uploadDir);
     },
     filename: (req, file, cb) => {
