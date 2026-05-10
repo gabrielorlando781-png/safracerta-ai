@@ -91,7 +91,7 @@ const aiLimiter = rateLimit({
     message: { error: 'Limite de análise por IA atingido para esta hora. Use o modo offline.' }
 });
 
-// Storage Configuration (Legacy JSON DB disabled for production/Vercel)
+// Storage Configuration (Legacy JSON DB disabled for production)
 const DB_PATH = path.join(__dirname, 'data', 'db.json');
 /* 
 Local DB initialization disabled for Vercel compatibility.
@@ -118,8 +118,7 @@ function writeDB(data) {
 // Multer for Pest Photos (Secured)
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        // Use /tmp for Vercel, public/uploads for local
-        const uploadDir = process.env.VERCEL ? '/tmp/uploads' : path.join(__dirname, 'public', 'uploads');
+        const uploadDir = path.join(__dirname, 'public', 'uploads');
         if (!fs.existsSync(uploadDir)) {
             try {
                 fs.mkdirSync(uploadDir, { recursive: true });
@@ -1057,11 +1056,7 @@ app.use((err, req, res, next) => {
     });
 });
 
-// Export for Vercel
-module.exports = app;
-
-if (process.env.NODE_ENV !== 'production') {
-    app.listen(PORT, () => {
-        console.log(`SafraCerta.ai running at http://localhost:${PORT}`);
-    });
-}
+// Startup
+app.listen(PORT, () => {
+    console.log(`SafraCerta.ai running at http://localhost:${PORT}`);
+});
