@@ -1,0 +1,26 @@
+/* src/index.css */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+/* Scoped styles for satellite module */
+
+.satellite-module input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+}
+
+.mapboxgl-ctrl-group {
+    background: rgba(15, 15, 15, 0.8) !important;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.1) !important;
+}
+
+.mapboxgl-ctrl-group button {
+    border-bottom: 1px solid rgba(255,255,255,0.05) !important;
+}
+
+.mapboxgl-ctrl-icon {
+    filter: invert(1);
+}
+
+.mapbox-gl-draw_polygon {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3l14 2-2 14-14-2z"/></svg>') !important;
+}

@@ -1,0 +1,42 @@
+{
+  "name": "safracerta.ai",
+  "version": "1.0.0",
+  "description": "Intelligent Agricultural Management System",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js",
+    "build:ui": "vite build",
+    "watch:ui": "vite build --watch"
+  },
+  "dependencies": {
+    "@google/generative-ai": "^0.24.1",
+    "@mapbox/mapbox-gl-draw": "^1.5.1",
+    "@supabase/supabase-js": "^2.105.4",
+    "@turf/turf": "^7.3.5",
+    "axios": "^1.16.0",
+    "body-parser": "^1.20.5",
+    "cors": "^2.8.6",
+    "dotenv": "^16.6.1",
+    "express": "^4.22.1",
+    "express-rate-limit": "^8.5.1",
+    "express-validator": "^7.3.2",
+    "form-data": "^4.0.5",
+    "helmet": "^8.1.0",
+    "lowdb": "^1.0.0",
+    "lucide-react": "^1.14.0",
+    "mapbox-gl": "^3.23.1",
+    "maplibre-gl": "^5.24.0",
+    "multer": "^1.4.5-lts.1",
+    "react": "^19.2.6",
+    "react-dom": "^19.2.6",
+    "react-router-dom": "^7.15.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^6.0.1",
+    "nodemon": "^2.0.22",
+    "vite": "^8.0.11"
+  },
+  "author": "Antigravity AI",
+  "license": "ISC"
+}
